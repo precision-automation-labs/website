@@ -140,7 +140,7 @@ export default function HomePage() {
 
               <div className="relative mt-6 aspect-square w-full overflow-hidden rounded-2xl border border-zinc-200 bg-white">
                 <Image
-                  src="/logo.png"
+                  src="/logo2.png"
                   alt="Precision Automation Labs"
                   fill
                   className="object-contain p-6"
