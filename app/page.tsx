@@ -24,7 +24,9 @@ type TabId = (typeof TABS)[number]["id"];
 
 function useRevealOnScroll() {
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]"),
+    );
     if (!els.length) return;
 
     const reduced =
@@ -49,7 +51,7 @@ function useRevealOnScroll() {
           }
         });
       },
-      { rootMargin: "-10% 0px -10% 0px", threshold: [0.12, 0.2, 0.35] }
+      { rootMargin: "-10% 0px -10% 0px", threshold: [0.12, 0.2, 0.35] },
     );
 
     els.forEach((el) => io.observe(el));
@@ -74,14 +76,16 @@ function useActiveSection(sectionIds: string[]) {
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
+          .sort(
+            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0),
+          )[0];
 
         if (visible?.target?.id) setActive(visible.target.id);
       },
       {
         rootMargin: "-18% 0px -62% 0px",
         threshold: reduced ? 0.1 : [0.12, 0.2, 0.3, 0.4, 0.5],
-      }
+      },
     );
 
     nodes.forEach((n) => io.observe(n));
@@ -136,16 +140,22 @@ export default function HomePage() {
   function useUnderlineSlider(
     rootRef: React.RefObject<HTMLDivElement | null>,
     selectorAttr: string,
-    activeId: string
+    activeId: string,
   ) {
-    const [underline, setUnderline] = useState({ left: 0, width: 0, ready: false });
+    const [underline, setUnderline] = useState({
+      left: 0,
+      width: 0,
+      ready: false,
+    });
 
     useEffect(() => {
       const root = rootRef.current;
       if (!root) return;
 
       const update = () => {
-        const btn = root.querySelector<HTMLElement>(`[${selectorAttr}="${activeId}"]`);
+        const btn = root.querySelector<HTMLElement>(
+          `[${selectorAttr}="${activeId}"]`,
+        );
         if (!btn) return;
 
         const rootRect = root.getBoundingClientRect();
@@ -168,14 +178,26 @@ export default function HomePage() {
   const desktopNavRef = useRef<HTMLDivElement | null>(null);
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
 
-  const desktopUnderline = useUnderlineSlider(desktopNavRef, "data-nav", activeSection);
-  const mobileUnderline = useUnderlineSlider(mobileNavRef, "data-mnav", activeSection);
+  const desktopUnderline = useUnderlineSlider(
+    desktopNavRef,
+    "data-nav",
+    activeSection,
+  );
+  const mobileUnderline = useUnderlineSlider(
+    mobileNavRef,
+    "data-mnav",
+    activeSection,
+  );
 
   // Tabs
   const [activeTab, setActiveTab] = useState<TabId>("focus");
 
   const tabBarRef = useRef<HTMLDivElement | null>(null);
-  const [tabUnderline, setTabUnderline] = useState({ left: 0, width: 0, ready: false });
+  const [tabUnderline, setTabUnderline] = useState({
+    left: 0,
+    width: 0,
+    ready: false,
+  });
 
   useEffect(() => {
     const root = tabBarRef.current;
@@ -187,7 +209,11 @@ export default function HomePage() {
 
       const rootRect = root.getBoundingClientRect();
       const rect = el.getBoundingClientRect();
-      setTabUnderline({ left: rect.left - rootRect.left, width: rect.width, ready: true });
+      setTabUnderline({
+        left: rect.left - rootRect.left,
+        width: rect.width,
+        ready: true,
+      });
     };
 
     update();
@@ -208,9 +234,18 @@ export default function HomePage() {
 
   // Content
   const heroCards = [
-    { k: "Reliability first", v: "Signals you can trust—less noise, fewer flaky failures." },
-    { k: "CI-integrated", v: "Fast feedback loops that keep quality close to code." },
-    { k: "Maintainable by design", v: "Clean structure, ownership, and documentation over time." },
+    {
+      k: "Reliability first",
+      v: "Signals you can trust—less noise, fewer flaky failures.",
+    },
+    {
+      k: "CI-integrated",
+      v: "Fast feedback loops that keep quality close to code.",
+    },
+    {
+      k: "Maintainable by design",
+      v: "Clean structure, ownership, and documentation over time.",
+    },
   ];
 
   const focusCards = [
@@ -244,16 +279,44 @@ export default function HomePage() {
       d: "A large test count means nothing if the failures aren’t trustworthy.",
       accent: true,
     },
-    { t: "Design for change", d: "Apps evolve—automation should be resilient and easy to update." },
-    { t: "Keep the feedback loop short", d: "The best automation helps you decide quickly and confidently." },
-    { t: "Make ownership obvious", d: "Clear ownership keeps suites healthy over time.", accent: true },
+    {
+      t: "Design for change",
+      d: "Apps evolve—automation should be resilient and easy to update.",
+    },
+    {
+      t: "Keep the feedback loop short",
+      d: "The best automation helps you decide quickly and confidently.",
+    },
+    {
+      t: "Make ownership obvious",
+      d: "Clear ownership keeps suites healthy over time.",
+      accent: true,
+    },
   ];
 
   const processCards = [
-    { step: "STEP 1", t: "Define the signal", d: "What decision does this enable?", accent: true },
-    { step: "STEP 2", t: "Build deterministically", d: "Stable locators, data, and assertions." },
-    { step: "STEP 3", t: "Integrate into CI", d: "PR gates, nightly checks, releases." },
-    { step: "STEP 4", t: "Maintain over time", d: "Ownership + docs prevent decay.", accent: true },
+    {
+      step: "STEP 1",
+      t: "Define the signal",
+      d: "What decision does this enable?",
+      accent: true,
+    },
+    {
+      step: "STEP 2",
+      t: "Build deterministically",
+      d: "Stable locators, data, and assertions.",
+    },
+    {
+      step: "STEP 3",
+      t: "Integrate into CI",
+      d: "PR gates, nightly checks, releases.",
+    },
+    {
+      step: "STEP 4",
+      t: "Maintain over time",
+      d: "Ownership + docs prevent decay.",
+      accent: true,
+    },
   ];
 
   const toolboxBlocks = [
@@ -271,12 +334,22 @@ export default function HomePage() {
     {
       title: "CI & Pipelines",
       desc: "Automation where it matters: PRs, nightly checks, releases.",
-      tools: ["Azure DevOps", "GitHub Actions", "Parallel execution", "Artifacts"],
+      tools: [
+        "Azure DevOps",
+        "GitHub Actions",
+        "Parallel execution",
+        "Artifacts",
+      ],
     },
     {
       title: "Reporting & Signals",
       desc: "Readable outputs that help teams act quickly.",
-      tools: ["HTML reports", "Failure categorization", "Trend tracking", "Flake reduction"],
+      tools: [
+        "HTML reports",
+        "Failure categorization",
+        "Trend tracking",
+        "Flake reduction",
+      ],
       accent: true,
     },
   ];
@@ -292,7 +365,7 @@ export default function HomePage() {
     <div
       className={cn(
         "pointer-events-none absolute h-[2px] rounded-full brand-gradient opacity-60 transition-opacity duration-200 group-hover:opacity-90",
-        inset
+        inset,
       )}
     />
   );
@@ -347,7 +420,9 @@ export default function HomePage() {
         [data-reveal] {
           opacity: 0;
           transform: translateY(14px);
-          transition: opacity 520ms ease, transform 520ms ease;
+          transition:
+            opacity 520ms ease,
+            transform 520ms ease;
           will-change: opacity, transform;
         }
         [data-reveal].is-visible {
@@ -372,98 +447,122 @@ export default function HomePage() {
       {/* Header */}
       <header
         className={cn(
-          "sticky top-0 z-50 border-b border-zinc-200 backdrop-blur",
-          scrolled ? "bg-white/85" : "bg-white/70"
+          // ✅ added "relative" so the gradient overlay can sit behind content
+          "sticky top-0 z-50 border-b border-zinc-200 backdrop-blur relative",
+          // ✅ Option 2: glassy + lighter white
+          scrolled
+            ? "bg-white/60 backdrop-blur-xl"
+            : "bg-white/50 backdrop-blur-lg",
         )}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <Link href="/" className="group flex items-center gap-3">
-            <span className="relative h-10 w-10 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
-              <Image
-                src="/logo.png"
-                alt="Precision Automation Labs logo"
-                fill
-                className="object-contain p-1.5"
-                priority
-              />
-            </span>
-            <div className="leading-tight">
-              <div className="text-sm font-semibold tracking-tight">Precision Automation Labs</div>
-              <div className="text-xs text-zinc-500">QA Automation Philosophy &amp; Engineering</div>
+        {/* ✅ subtle brand tint over the glass */}
+        <div className="pointer-events-none absolute inset-0 brand-gradient-soft opacity-60" />
+
+        {/* ✅ ensure header contents sit above the overlay */}
+        <div className="relative">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+            <Link href="/" className="group flex items-center gap-3">
+              <span className="relative h-10 w-10 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-transform duration-300 group-hover:scale-[1.02]">
+                <Image
+                  src="/logo.png"
+                  alt="Precision Automation Labs logo"
+                  fill
+                  className="object-contain p-1.5"
+                  priority
+                />
+              </span>
+              <div className="leading-tight">
+                <div className="text-sm font-semibold tracking-tight">
+                  Precision Automation Labs
+                </div>
+                <div className="text-xs text-zinc-500">
+                  QA Automation Philosophy &amp; Engineering
+                </div>
+              </div>
+            </Link>
+
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-8">
+              <div
+                ref={desktopNavRef}
+                className="relative flex items-center gap-6"
+              >
+                {NAV.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      onClick={scrollToId(item.id)}
+                      data-nav={item.id}
+                      className={cn(
+                        "text-sm transition-colors",
+                        isActive
+                          ? "text-zinc-900"
+                          : "text-zinc-600 hover:text-zinc-900",
+                      )}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
+
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute -bottom-2 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
+                    desktopUnderline.ready ? "opacity-100" : "opacity-0",
+                  )}
+                  style={{
+                    width: desktopUnderline.width,
+                    transform: `translateX(${desktopUnderline.left}px)`,
+                    background: "var(--brand-gradient)",
+                  }}
+                />
+              </div>
             </div>
-          </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <div ref={desktopNavRef} className="relative flex items-center gap-6">
-              {NAV.map((item) => {
-                const isActive = activeSection === item.id;
-                return (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    onClick={scrollToId(item.id)}
-                    data-nav={item.id}
-                    className={cn(
-                      "text-sm transition-colors",
-                      isActive ? "text-zinc-900" : "text-zinc-600 hover:text-zinc-900"
-                    )}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
+            {/* Mobile nav */}
+            <div className="md:hidden">
+              <div
+                ref={mobileNavRef}
+                className="relative flex items-center gap-6"
+              >
+                {NAV.map((item) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      onClick={scrollToId(item.id)}
+                      data-mnav={item.id}
+                      className={cn(
+                        "text-sm transition-colors",
+                        isActive
+                          ? "text-zinc-900"
+                          : "text-zinc-600 hover:text-zinc-900",
+                      )}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
 
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute -bottom-2 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
-                  desktopUnderline.ready ? "opacity-100" : "opacity-0"
-                )}
-                style={{
-                  width: desktopUnderline.width,
-                  transform: `translateX(${desktopUnderline.left}px)`,
-                  background: "var(--brand-gradient)",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Mobile nav */}
-          <div className="md:hidden">
-            <div ref={mobileNavRef} className="relative flex items-center gap-6">
-              {NAV.map((item) => {
-                const isActive = activeSection === item.id;
-                return (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    onClick={scrollToId(item.id)}
-                    data-mnav={item.id}
-                    className={cn(
-                      "text-sm transition-colors",
-                      isActive ? "text-zinc-900" : "text-zinc-600 hover:text-zinc-900"
-                    )}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
-
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute -bottom-2 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
-                  mobileUnderline.ready ? "opacity-100" : "opacity-0"
-                )}
-                style={{
-                  width: mobileUnderline.width,
-                  transform: `translateX(${mobileUnderline.left}px)`,
-                  background: "var(--brand-gradient)",
-                }}
-              />
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute -bottom-2 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
+                    mobileUnderline.ready ? "opacity-100" : "opacity-0",
+                  )}
+                  style={{
+                    width: mobileUnderline.width,
+                    transform: `translateX(${mobileUnderline.left}px)`,
+                    background: "var(--brand-gradient)",
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -495,7 +594,9 @@ export default function HomePage() {
                 className="mt-6 text-4xl font-semibold tracking-tight md:text-6xl"
               >
                 Automation that produces
-                <span className="block text-zinc-700">stable, actionable signals.</span>
+                <span className="block text-zinc-700">
+                  stable, actionable signals.
+                </span>
               </h1>
 
               <p
@@ -503,10 +604,10 @@ export default function HomePage() {
                 data-stagger="3"
                 className="mt-5 max-w-2xl text-base leading-relaxed text-zinc-600 md:text-lg"
               >
-                Precision Automation Labs is building a brand around what we believe makes QA
-                automation effective: fewer flaky tests, faster feedback loops, and clear
-                ownership. We’re currently focused on R&amp;D, publishing learnings, and building
-                internal tooling.
+                Precision Automation Labs is building a brand around what we
+                believe makes QA automation effective: fewer flaky tests, faster
+                feedback loops, and clear ownership. We’re currently focused on
+                R&amp;D, publishing learnings, and building internal tooling.
               </p>
 
               <div
@@ -595,13 +696,15 @@ export default function HomePage() {
       <section id="playbook" className="border-t border-zinc-200">
         <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
           <div data-reveal="major" className="max-w-3xl">
-            <div className="text-xs font-semibold tracking-widest text-blue-700">PLAYBOOK</div>
+            <div className="text-xs font-semibold tracking-widest text-blue-700">
+              PLAYBOOK
+            </div>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
               A minimal, high-signal view of how we build QA automation
             </h2>
             <p className="mt-3 text-base leading-relaxed text-zinc-600">
-              Use the tabs to switch between what we prioritize, what we believe, and how we
-              execute.
+              Use the tabs to switch between what we prioritize, what we
+              believe, and how we execute.
             </p>
           </div>
 
@@ -628,7 +731,9 @@ export default function HomePage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={cn(
                       "relative z-10 rounded-full px-4 py-2 text-sm font-semibold transition-all",
-                      isActive ? "text-zinc-900 shadow-sm" : "text-zinc-600 hover:text-zinc-900"
+                      isActive
+                        ? "text-zinc-900 shadow-sm"
+                        : "text-zinc-600 hover:text-zinc-900",
                     )}
                   >
                     {isActive && (
@@ -646,7 +751,7 @@ export default function HomePage() {
                 aria-hidden="true"
                 className={cn(
                   "absolute bottom-0 left-0 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
-                  tabUnderline.ready ? "opacity-100" : "opacity-0"
+                  tabUnderline.ready ? "opacity-100" : "opacity-0",
                 )}
                 style={{
                   width: tabUnderline.width,
@@ -660,7 +765,9 @@ export default function HomePage() {
               <div
                 className={cn(
                   "transition-[opacity,transform] duration-300",
-                  tabAnimating ? "opacity-0 translate-y-1" : "opacity-100 translate-y-0"
+                  tabAnimating
+                    ? "opacity-0 translate-y-1"
+                    : "opacity-100 translate-y-0",
                 )}
               >
                 {activeTab === "focus" && (
@@ -670,7 +777,7 @@ export default function HomePage() {
                         key={s.t}
                         className={cn(
                           "group relative rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
-                          s.accent && "ring-1 ring-zinc-900/5"
+                          s.accent && "ring-1 ring-zinc-900/5",
                         )}
                       >
                         {s.accent && (
@@ -701,7 +808,7 @@ export default function HomePage() {
                         key={s.t}
                         className={cn(
                           "group relative rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
-                          (s as any).accent && "ring-1 ring-zinc-900/5"
+                          (s as any).accent && "ring-1 ring-zinc-900/5",
                         )}
                       >
                         {(s as any).accent && (
@@ -724,7 +831,7 @@ export default function HomePage() {
                         key={s.t}
                         className={cn(
                           "group relative rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
-                          (s as any).accent && "ring-1 ring-zinc-900/5"
+                          (s as any).accent && "ring-1 ring-zinc-900/5",
                         )}
                       >
                         {(s as any).accent && (
@@ -735,7 +842,9 @@ export default function HomePage() {
                           <div className="text-xs font-semibold tracking-widest text-blue-700">
                             {s.step}
                           </div>
-                          <h3 className="mt-2 text-base font-semibold">{s.t}</h3>
+                          <h3 className="mt-2 text-base font-semibold">
+                            {s.t}
+                          </h3>
                           <p className="mt-2 text-sm text-zinc-600">{s.d}</p>
                         </div>
                       </div>
@@ -745,7 +854,8 @@ export default function HomePage() {
               </div>
 
               <div className="mt-6 text-xs text-zinc-500">
-                Tip: Clicking the nav updates immediately; scrolling keeps it accurate.
+                Tip: Clicking the nav updates immediately; scrolling keeps it
+                accurate.
               </div>
             </div>
           </div>
@@ -756,13 +866,15 @@ export default function HomePage() {
       <section id="toolbox" className="border-t border-zinc-200">
         <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
           <div data-reveal="major" className="max-w-3xl">
-            <div className="text-xs font-semibold tracking-widest text-blue-700">TOOLBOX</div>
+            <div className="text-xs font-semibold tracking-widest text-blue-700">
+              TOOLBOX
+            </div>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
               Tools chosen for reliability and clarity
             </h2>
             <p className="mt-3 text-base leading-relaxed text-zinc-600">
-              We select tools based on determinism, maintainability, and the quality of signal
-              they produce — not trends.
+              We select tools based on determinism, maintainability, and the
+              quality of signal they produce — not trends.
             </p>
           </div>
 
@@ -773,7 +885,7 @@ export default function HomePage() {
                 data-reveal
                 className={cn(
                   "group relative rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
-                  b.accent && "ring-1 ring-zinc-900/5"
+                  b.accent && "ring-1 ring-zinc-900/5",
                 )}
               >
                 {b.accent && (
@@ -806,14 +918,17 @@ export default function HomePage() {
       <section id="connect" className="border-t border-zinc-200">
         <div className="mx-auto max-w-6xl px-5 py-14 md:py-20">
           <div data-reveal="major" className="max-w-3xl">
-            <div className="text-xs font-semibold tracking-widest text-blue-700">UPDATES</div>
+            <div className="text-xs font-semibold tracking-widest text-blue-700">
+              UPDATES
+            </div>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
               Building in public (within reason)
             </h2>
             <p className="mt-3 text-base leading-relaxed text-zinc-600">
-              We’re currently focused on brand development, internal R&amp;D, and publishing
-              generalized learnings around QA automation. We’ll share updates here as we publish
-              articles, templates, and example patterns.
+              We’re currently focused on brand development, internal R&amp;D,
+              and publishing generalized learnings around QA automation. We’ll
+              share updates here as we publish articles, templates, and example
+              patterns.
             </p>
           </div>
 
@@ -858,8 +973,8 @@ export default function HomePage() {
               </div>
 
               <div className="mt-4 text-xs text-zinc-500">
-                Note: This site describes our philosophy and R&amp;D efforts. It does not include
-                client-specific details.
+                Note: This site describes our philosophy and R&amp;D efforts. It
+                does not include client-specific details.
               </div>
             </div>
           </div>
