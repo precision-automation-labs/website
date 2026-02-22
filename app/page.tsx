@@ -548,47 +548,64 @@ export default function HomePage() {
                   }}
                 />
               </div>
+
+              <Link
+                href="/legal"
+                className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
+              >
+                Legal
+              </Link>
             </div>
 
             {/* Mobile nav */}
             <div className="md:hidden">
-              <div
-                ref={mobileNavRef}
-                className="relative flex items-center gap-6"
-              >
-                {NAV.map((item) => {
-                  const isActive = activeSection === item.id;
-                  return (
-                    <a
-                      key={item.id}
-                      href={`#${item.id}`}
-                      onClick={scrollToId(item.id)}
-                      data-mnav={item.id}
-                      className={cn(
-                        "text-sm transition-colors",
-                        isActive
-                          ? "text-zinc-900"
-                          : "text-zinc-600 hover:text-zinc-900",
-                      )}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {item.label}
-                    </a>
-                  );
-                })}
+              <div className="flex items-center gap-6">
+                <div
+                  ref={mobileNavRef}
+                  className="relative flex items-center gap-6"
+                >
+                  {NAV.map((item) => {
+                    const isActive = activeSection === item.id;
+                    return (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        onClick={scrollToId(item.id)}
+                        data-mnav={item.id}
+                        className={cn(
+                          "text-sm transition-colors",
+                          isActive
+                            ? "text-zinc-900"
+                            : "text-zinc-600 hover:text-zinc-900",
+                        )}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {item.label}
+                      </a>
+                    );
+                  })}
 
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "absolute -bottom-2 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
-                    mobileUnderline.ready ? "opacity-100" : "opacity-0",
-                  )}
-                  style={{
-                    width: mobileUnderline.width,
-                    transform: `translateX(${mobileUnderline.left}px)`,
-                    background: "var(--brand-gradient)",
-                  }}
-                />
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute -bottom-2 h-[2px] rounded-full transition-[transform,width,opacity] duration-300",
+                      mobileUnderline.ready ? "opacity-100" : "opacity-0",
+                    )}
+                    style={{
+                      width: mobileUnderline.width,
+                      transform: `translateX(${mobileUnderline.left}px)`,
+                      background: "var(--brand-gradient)",
+                    }}
+                  />
+                </div>
+
+                {/* ✅ New: Legal link */}
+                <Link
+                  href="/legal"
+                  className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
+                >
+                  Legal
+                </Link>
               </div>
             </div>
           </div>
