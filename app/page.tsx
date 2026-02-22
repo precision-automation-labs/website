@@ -61,6 +61,22 @@ function useRevealOnScroll() {
 
 function useActiveSection(sectionIds: string[]) {
   const [active, setActive] = useState(sectionIds[0] ?? "");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia?.("(max-width: 767px)");
+    const update = () => setIsMobile(!!mql?.matches);
+    update();
+
+    if (!mql) return;
+    if (typeof mql.addEventListener === "function") {
+      mql.addEventListener("change", update);
+      return () => mql.removeEventListener("change", update);
+    } else {
+      mql.addListener(update);
+      return () => mql.removeListener(update);
+    }
+  }, []);
 
   useEffect(() => {
     const nodes = sectionIds
@@ -83,14 +99,18 @@ function useActiveSection(sectionIds: string[]) {
         if (visible?.target?.id) setActive(visible.target.id);
       },
       {
-        rootMargin: "-18% 0px -62% 0px",
-        threshold: reduced ? 0.1 : [0.12, 0.2, 0.3, 0.4, 0.5],
+        rootMargin: isMobile ? "-28% 0px -58% 0px" : "-18% 0px -62% 0px",
+        threshold: reduced
+          ? 0.1
+          : isMobile
+            ? [0.05, 0.1, 0.2, 0.3, 0.4]
+            : [0.12, 0.2, 0.3, 0.4, 0.5],
       },
     );
 
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
-  }, [sectionIds]);
+  }, [sectionIds, isMobile]);
 
   return active;
 }
@@ -116,6 +136,17 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // ✅ CTA reveal only after user scrolls
+  const [revealCTAs, setRevealCTAs] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY > 8) setRevealCTAs(true);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -447,18 +478,14 @@ export default function HomePage() {
       {/* Header */}
       <header
         className={cn(
-          // ✅ added "relative" so the gradient overlay can sit behind content
           "sticky top-0 z-50 border-b border-zinc-200 backdrop-blur relative",
-          // ✅ Option 2: glassy + lighter white
           scrolled
             ? "bg-white/60 backdrop-blur-xl"
             : "bg-white/50 backdrop-blur-lg",
         )}
       >
-        {/* ✅ subtle brand tint over the glass */}
         <div className="pointer-events-none absolute inset-0 brand-gradient-soft opacity-60" />
 
-        {/* ✅ ensure header contents sit above the overlay */}
         <div className="relative">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
             <Link href="/" className="group flex items-center gap-3">
@@ -576,7 +603,7 @@ export default function HomePage() {
           <div className="absolute top-56 right-1/4 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <div className="relative mx-auto max-w-6xl px-5 pt-8 pb-16 md:pt-10 md:pb-24">
           <div className="grid gap-10 md:grid-cols-[1.2fr_.8fr] md:items-start">
             <div>
               <div
@@ -611,9 +638,13 @@ export default function HomePage() {
               </p>
 
               <div
-                data-reveal="major"
                 data-stagger="4"
-                className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+                className={cn(
+                  "mt-8 flex flex-col gap-3 sm:flex-row sm:items-center",
+                  "opacity-0 translate-y-[14px] pointer-events-none",
+                  "transition-[opacity,transform] duration-[520ms] ease-[ease] will-change-[opacity,transform]",
+                  revealCTAs && "opacity-100 translate-y-0 pointer-events-auto",
+                )}
               >
                 <a
                   href="#playbook"
@@ -981,11 +1012,88 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-zinc-200">
-        <div className="mx-auto max-w-6xl px-5 py-10 text-sm text-zinc-600">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      {/* ✅ Footer with same gradient tint as header */}
+      <footer className="relative border-t border-zinc-200">
+        <div className="pointer-events-none absolute inset-0 brand-gradient-soft opacity-60" />
+        <div className="relative mx-auto max-w-6xl px-5 py-10 text-sm text-zinc-600">
+          <div className="flex flex-col items-center justify-center gap-5">
             <div>© {new Date().getFullYear()} Precision Automation Labs.</div>
-            <div>Built with Next.js + Vercel.</div>
+
+            <div className="flex items-center justify-center gap-5">
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-zinc-500 hover:text-zinc-900 transition-colors"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.476-.9 1.637-1.852 3.37-1.852 3.6 0 4.266 2.369 4.266 5.455v6.288zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM6.814 20.452H3.86V9h2.954v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.727v20.545C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.273V1.727C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
+              </a>
+
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-zinc-500 hover:text-zinc-900 transition-colors"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5z" />
+                  <path d="M12 7.25A4.75 4.75 0 1 1 7.25 12 4.756 4.756 0 0 1 12 7.25zm0 1.5A3.25 3.25 0 1 0 15.25 12 3.254 3.254 0 0 0 12 8.75z" />
+                  <path d="M17.25 6.5a1 1 0 1 1-1-1 1 1 0 0 1 1 1z" />
+                </svg>
+              </a>
+
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="text-zinc-500 hover:text-zinc-900 transition-colors"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M22.675 0h-21.35C.597 0 0 .597 0 1.326v21.348C0 23.403.597 24 1.326 24H12.82v-9.294H9.692V11.01h3.128V8.309c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.312h3.587l-.467 3.696h-3.12V24h6.116C23.403 24 24 23.403 24 22.674V1.326C24 .597 23.403 0 22.675 0z" />
+                </svg>
+              </a>
+
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                className="text-zinc-500 hover:text-zinc-900 transition-colors"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M18.9 2H22l-6.77 7.73L23.3 22h-6.54l-5.12-6.67L5.8 22H2.7l7.24-8.27L1 2h6.7l4.64 6.06L18.9 2zm-1.15 18h1.71L6.88 3.9H5.05L17.75 20z" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </footer>
