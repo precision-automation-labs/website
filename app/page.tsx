@@ -1032,11 +1032,11 @@ export default function HomePage() {
       {/* ✅ Footer with same gradient tint as header */}
       <footer className="relative border-t border-zinc-200">
         <div className="pointer-events-none absolute inset-0 brand-gradient-soft opacity-60" />
-        <div className="relative mx-auto max-w-6xl px-5 py-10 text-sm text-zinc-600">
+        <div className="relative mx-auto max-w-6xl px-5 py-6 text-sm text-zinc-600">
           <div className="flex flex-col items-center justify-center gap-5">
             <div>© {new Date().getFullYear()} Precision Automation Labs.</div>
 
-            <div className="flex items-center justify-center gap-5">
+            <div className="flex items-center justify-center gap-4">
               <a
                 href="#"
                 target="_blank"
