@@ -21,17 +21,20 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="relative pt-24 md:pt-40 pb-12 bg-[#050508] border-t border-white/5 overflow-hidden flex flex-col justify-between min-h-screen">
+    <section
+      id="contact"
+      className="relative pt-24 md:pt-40 pb-12 bg-[#050508] border-t border-white/5 overflow-hidden flex flex-col justify-between min-h-screen"
+    >
       {/* Spotlight and Architecture Background */}
       <div className="absolute inset-0 pointer-events-none top-0">
-         <Image 
-          src="/systems_architecture.png" 
-          alt="Systems Architecture" 
-          fill 
+        <Image
+          src="/systems_architecture.png"
+          alt="Systems Architecture"
+          fill
           className="object-cover opacity-20 object-top mix-blend-screen"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/80 via-[#050508]/90 to-[#050508]" />
-        
+
         {/* Spotlight source */}
         <div className="absolute -top-[40vh] left-1/2 -translate-x-1/2 w-[100vw] h-[100vh] bg-brand-blue/20 blur-[150px] rounded-full mix-blend-screen" />
       </div>
@@ -79,8 +82,9 @@ export default function Contact() {
               Precision Automation Labs
             </div>
             <p className="text-sm leading-relaxed text-zinc-300 mb-6">
-               A focused approach to automation quality: fewer flaky outcomes,
-               clearer ownership, and stronger signals for teams making real decisions.
+              A focused approach to automation quality: fewer flaky outcomes,
+              clearer ownership, and stronger signals for teams making real
+              decisions.
             </p>
             <ul className="space-y-3 text-xs text-zinc-400">
               {focusAreas.map((item) => (
@@ -100,7 +104,10 @@ export default function Contact() {
             </div>
             <ul className="space-y-4 text-sm text-zinc-300">
               {nextSteps.map((item) => (
-                <li key={item} className="flex gap-3 items-center border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                <li
+                  key={item}
+                  className="flex gap-3 items-center border-b border-white/5 pb-3 last:border-0 last:pb-0"
+                >
                   <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0" />
                   <span>{item}</span>
                 </li>
@@ -114,13 +121,14 @@ export default function Contact() {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 mt-24">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-8 border-t border-white/10 pt-8">
           <div className="flex items-center gap-4">
-            <div className="relative h-10 w-10 overflow-hidden bg-white/5 rounded-lg border border-white/10 flex items-center justify-center p-1">
+            <div className="relative h-10 w-10 overflow-hidden flex items-center justify-center p-1">
               {/* Keeping the Next Image but assuming it might be a white logo now or we just use text */}
-               <Image
+              <Image
                 src={brand.logoSrc}
                 alt={`${brand.name} logo`}
                 fill
-                className="object-contain p-2 invert mix-blend-screen"
+                className="object-contain"
+                priority
               />
             </div>
             <div>
@@ -128,13 +136,16 @@ export default function Contact() {
                 {brand.name}
               </div>
               <div className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">
-                 {brand.tagline}
+                {brand.tagline}
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-8 text-xs font-semibold tracking-widest text-zinc-500 uppercase">
-             <a href={contact.primaryCta.href} className="hover:text-white transition-colors">
+            <a
+              href={contact.primaryCta.href}
+              className="hover:text-white transition-colors"
+            >
               Contact
             </a>
             <a href="#updates" className="hover:text-white transition-colors">

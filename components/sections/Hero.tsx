@@ -31,23 +31,32 @@ export default function Hero() {
       },
     });
 
-    tl.to(contentRef.current, {
-      opacity: 0,
-      scale: 0.95,
-      y: -50,
-      filter: "blur(10px)",
-      ease: "power2.inOut",
-    }, 0)
-    .to(bgRef.current, {
-      scale: 1.1,
-      opacity: 0.3,
-      ease: "power1.inOut",
-    }, 0);
+    tl.to(
+      contentRef.current,
+      {
+        opacity: 0,
+        scale: 0.95,
+        y: -50,
+        filter: "blur(10px)",
+        ease: "power2.inOut",
+      },
+      0
+    ).to(
+      bgRef.current,
+      {
+        scale: 1.1,
+        opacity: 0.3,
+        ease: "power1.inOut",
+      },
+      0
+    );
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="relative h-screen w-full overflow-hidden bg-[#050508]">
-      {/* Background Cinematic Image */}
+    <section
+      ref={sectionRef}
+      className="relative h-screen w-full overflow-hidden bg-[#050508]"
+    >
       <div ref={bgRef} className="absolute inset-0 z-0">
         <Image
           src="/precision_core.png"
@@ -57,13 +66,11 @@ export default function Hero() {
           priority
           sizes="100vw"
         />
-        {/* Gradient Overlays to blend into background */}
         <div className="absolute inset-0 bg-background/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background to-transparent" />
       </div>
 
-      {/* Lighting Flairs */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden flex items-center justify-center">
         <div className="absolute w-[60vw] h-[30vh] bg-brand-indigo/10 blur-[100px] rounded-full transform -translate-y-1/2 mix-blend-screen" />
         <div className="absolute w-[40vw] h-[20vh] bg-brand-blue/10 blur-[100px] rounded-full transform translate-y-1/4 mix-blend-screen" />
@@ -71,14 +78,11 @@ export default function Hero() {
 
       <div className="relative z-10 h-full w-full flex flex-col justify-end pb-[15vh] px-6 md:px-12 max-w-7xl mx-auto">
         <div ref={contentRef} className="max-w-4xl">
-          <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-1.5 text-xs text-zinc-300 shadow-xl mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-blue shadow-[0_0_8px_rgba(126,162,224,0.8)]" />
-            <span className="uppercase tracking-widest font-medium">{hero.eyebrow}</span>
-          </div>
-
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white leading-[1.1]">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white leading-[1.02]">
             {hero.titleTop}
-            <span className="block brand-gradient-text mt-2">{hero.titleBottom}</span>
+            <span className="block brand-gradient-text mt-2">
+              {hero.titleBottom}
+            </span>
           </h1>
 
           <p className="mt-8 max-w-2xl text-lg md:text-xl leading-relaxed text-zinc-400 font-light">
@@ -106,10 +110,11 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      
-      {/* Scroll indicator */}
+
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 z-20">
-        <div className="text-[10px] uppercase tracking-widest text-zinc-500">Initiate Sequence</div>
+        <div className="text-[10px] uppercase tracking-widest text-zinc-500">
+          Initiate Sequence
+        </div>
         <div className="w-px h-12 bg-gradient-to-b from-brand-blue to-transparent" />
       </div>
     </section>
