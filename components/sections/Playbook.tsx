@@ -23,7 +23,23 @@ export default function Playbook() {
   const bgRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    if (!sectionRef.current) return;
+    if (
+      !sectionRef.current ||
+      !introRef.current ||
+      !focusRef.current ||
+      !principlesRef.current ||
+      !processRef.current ||
+      !bgRef.current
+    ) {
+      return;
+    }
+
+    if (window.innerWidth < 768) {
+      gsap.set([focusRef.current, principlesRef.current, processRef.current], {
+        clearProps: "all",
+      });
+      return;
+    }
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -95,25 +111,30 @@ export default function Playbook() {
     );
 
     tl.to({}, { duration: 1 });
+
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+    };
   }, { scope: sectionRef });
 
   const renderCardGrid = (items: readonly PlaybookCard[], title: string) => (
-    <div className="w-full max-w-5xl mx-auto relative overflow-hidden rounded-[30px] border border-white/10 bg-black/35 backdrop-blur-xl p-8 md:p-12 shadow-2xl">
+    <div className="w-full max-w-5xl mx-auto relative overflow-hidden rounded-[30px] border border-white/10 bg-black/35 backdrop-blur-xl p-6 md:p-12 shadow-2xl">
       <div className="absolute inset-0 brand-gradient-soft opacity-20 pointer-events-none" />
       <div className="absolute inset-x-8 top-0 h-px brand-gradient opacity-60" />
       <div className="absolute -top-32 left-1/2 w-96 h-96 -translate-x-1/2 rounded-full bg-brand-indigo/10 blur-[100px] pointer-events-none" />
 
       <div className="relative z-10">
-        <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
+        <h3 className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-6 md:mb-8">
           {title}
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
           {items.map((card, i) => (
             <div
               key={i}
               className={clsx(
-                "relative overflow-hidden rounded-2xl border p-6 transition-all backdrop-blur-md",
+                "relative overflow-hidden rounded-2xl border p-5 md:p-6 transition-all backdrop-blur-md",
                 card.accent
                   ? "bg-white/10 border-white/20"
                   : "bg-white/5 border-white/10"
@@ -161,68 +182,92 @@ export default function Playbook() {
     <section
       id="playbook"
       ref={sectionRef}
-      className="relative h-screen w-full bg-[#050508] overflow-hidden flex flex-col justify-center"
+      className="relative w-full bg-[#050508] overflow-hidden py-20 md:h-screen md:py-0"
     >
-      <div
-        ref={bgRef}
-        className="absolute inset-0 z-0 pointer-events-none"
-      >
+      <div ref={bgRef} className="absolute inset-0 z-0 pointer-events-none">
         <Image
           src="/systems_architecture.png"
           alt="Systems architecture background"
           fill
-          className="object-cover object-center opacity-28 mix-blend-screen"
+          className="object-cover object-center opacity-18 md:opacity-28 mix-blend-screen"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-[#050508]/55" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/65 via-[#050508]/35 to-[#050508]/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050508]/75 via-transparent to-[#050508]/55" />
+        <div className="absolute inset-0 bg-[#050508]/82 md:bg-[#050508]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/70 via-[#050508]/82 to-[#050508] md:from-[#050508]/65 md:via-[#050508]/35 md:to-[#050508]/80" />
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#050508]/75 via-transparent to-[#050508]/55" />
       </div>
 
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]">
         <div className="absolute top-0 left-0 w-full h-px brand-gradient opacity-20" />
-        <div className="absolute top-1/4 left-[12%] w-[26rem] h-[26rem] rounded-full bg-brand-blue/8 blur-[140px]" />
-        <div className="absolute bottom-0 right-[10%] w-[24rem] h-[24rem] rounded-full bg-brand-magenta/8 blur-[140px]" />
+        <div className="absolute top-24 left-[10%] w-56 h-56 md:top-1/4 md:left-[12%] md:w-[26rem] md:h-[26rem] rounded-full bg-brand-blue/8 blur-[120px] md:blur-[140px]" />
+        <div className="absolute bottom-24 right-[8%] w-52 h-52 md:bottom-0 md:right-[10%] md:w-[24rem] md:h-[24rem] rounded-full bg-brand-magenta/8 blur-[120px] md:blur-[140px]" />
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center p-6 z-10">
-        <div
-          ref={introRef}
-          className="text-center max-w-4xl absolute w-full px-6"
-        >
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold tracking-widest text-brand-blue mb-8 backdrop-blur-md">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 md:hidden">
+        <div ref={introRef} className="text-center max-w-4xl mx-auto">
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold tracking-widest text-brand-blue mb-6 backdrop-blur-md">
             {playbook.eyebrow}
           </span>
 
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-white">
             A stronger operating model for
             <span className="block brand-gradient-text mt-2">
               high-signal automation.
             </span>
           </h2>
 
-          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto">
+          <p className="mt-5 text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
             {playbook.description}
           </p>
         </div>
 
+        <div className="mt-10 space-y-6">
+          {renderCardGrid(playbook.focus, "Focus")}
+          {renderCardGrid(playbook.principles, "Principles")}
+          {renderCardGrid(playbook.process, "Process")}
+        </div>
+      </div>
+
+      <div className="hidden md:block absolute inset-0 z-10">
+        <div className="absolute inset-0 flex items-center justify-center px-6">
+          <div
+            ref={introRef}
+            className="text-center max-w-4xl w-full"
+          >
+            <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold tracking-widest text-brand-blue mb-8 backdrop-blur-md">
+              {playbook.eyebrow}
+            </span>
+
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+              A stronger operating model for
+              <span className="block brand-gradient-text mt-2">
+                high-signal automation.
+              </span>
+            </h2>
+
+            <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto">
+              {playbook.description}
+            </p>
+          </div>
+        </div>
+
         <div
           ref={focusRef}
-          className="absolute w-full px-6 flex justify-center opacity-0 transform translate-y-full"
+          className="absolute inset-0 flex items-center justify-center px-6 opacity-0 translate-y-full"
         >
           {renderCardGrid(playbook.focus, "Focus")}
         </div>
 
         <div
           ref={principlesRef}
-          className="absolute w-full px-6 flex justify-center opacity-0 transform translate-y-full"
+          className="absolute inset-0 flex items-center justify-center px-6 opacity-0 translate-y-full"
         >
           {renderCardGrid(playbook.principles, "Principles")}
         </div>
 
         <div
           ref={processRef}
-          className="absolute w-full px-6 flex justify-center opacity-0 transform translate-y-full"
+          className="absolute inset-0 flex items-center justify-center px-6 opacity-0 translate-y-full"
         >
           {renderCardGrid(playbook.process, "Process")}
         </div>
